@@ -1,285 +1,294 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Loading Screen
+    // Esconde a tela de carregamento após a página carregar
     const loadingScreen = document.getElementById('loading-screen');
-    window.addEventListener('load', () => {
+    if (loadingScreen) {
+        loadingScreen.style.opacity = '0';
+        loadingScreen.style.visibility = 'hidden';
         setTimeout(() => {
-            loadingScreen.classList.add('hidden');
-        }, 800); // Esconde a tela de carregamento após 0.8 segundos
+            loadingScreen.style.display = 'none';
+        }, 500); // Tempo para a transição terminar
+    }
+
+    // Adiciona efeito LED ao rolar a página para o header
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
     });
 
-    // 2. Smooth Scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-            // Fechar menu mobile se estiver aberto
-            const navLinks = document.querySelector('.nav-links');
-            if (navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
+    // Ativa o LED no link de Início por padrão ao carregar
+    // E adiciona listener para atualizar o link ativo ao rolar
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section'); // Seleciona todas as suas seções
+
+    const activateNavLink = () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - header.offsetHeight; // Ajusta pela altura do header
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
             }
         });
-    });
 
-    // Função para scroll suave por section id (usada pelos botões CTA)
-    window.scrollToSection = function(sectionId) {
-        document.getElementById(sectionId).scrollIntoView({
-            behavior: 'smooth'
-        });
-    }
-
-    // 3. Header Actions (Search, Cart, Mobile Menu)
-    const searchOverlay = document.getElementById('search-overlay');
-    window.toggleSearch = function() {
-        searchOverlay.classList.toggle('active');
-        if (searchOverlay.classList.contains('active')) {
-            document.querySelector('.search-input').focus();
-        }
-    }
-
-    const cartSidebar = document.getElementById('cart-sidebar');
-    window.openCart = function() {
-        cartSidebar.classList.add('open');
-    }
-    window.closeCart = function() {
-        cartSidebar.classList.remove('open');
-    }
-    // Fechar carrinho ao clicar fora dele
-    document.addEventListener('click', (event) => {
-        if (!cartSidebar.contains(event.target) && !document.querySelector('.cart-btn').contains(event.target) && cartSidebar.classList.contains('open')) {
-            closeCart();
-        }
-    });
-
-
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    window.toggleMobileMenu = function() {
-        navLinks.classList.toggle('active');
-    }
-
-    // 4. Product Filtering
-    window.filterProducts = function(category) {
-        const productCards = document.querySelectorAll('.product-card');
-        const filterButtons = document.querySelectorAll('.filter-btn');
-
-        // Remover 'active' de todos os botões e adicionar ao clicado
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        document.querySelector(`.filter-btn[data-filter="${category}"]`).classList.add('active');
-
-        productCards.forEach(card => {
-            const cardCategories = card.dataset.category.split(' '); // Pode ter múltiplas categorias
-            if (category === 'all' || cardCategories.includes(category)) {
-                card.style.display = 'flex'; // Exibe o cartão
-            } else {
-                card.style.display = 'none'; // Esconde o cartão
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.href.includes(current)) {
+                link.classList.add('active');
             }
         });
     };
 
-    // Aplicar filtro "Todos" ao carregar a página
-    filterProducts('all');
-
-    // 5. Product Actions (Add to Cart, Buy Now, Quick View, Wishlist)
-    let cart = []; // Array para armazenar os itens do carrinho
-
-    window.addToCart = function(productName, price, productId) {
-        const existingItem = cart.find(item => item.id === productId);
-        if (existingItem) {
-            existingItem.quantity++;
-        } else {
-            cart.push({ id: productId, name: productName, price: price, quantity: 1 });
-        }
-        updateCartDisplay();
-        showNotification(`${productName} adicionado ao carrinho!`);
-        
-        // Efeito Ripple no botão
-        const button = event.currentTarget;
-        const circle = document.createElement('span');
-        const diameter = Math.max(button.clientWidth, button.clientHeight);
-        const radius = diameter / 2;
-
-        circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${event.clientX - (button.getBoundingClientRect().left + radius)}px`;
-        circle.style.top = `${event.clientY - (button.getBoundingClientRect().top + radius)}px`;
-        circle.classList.add('btn-ripple');
-        button.appendChild(circle);
-
-        circle.addEventListener('animationend', () => {
-            circle.remove();
-        });
-    };
-
-    window.buyNow = function(productName, price) {
-        // Implementar lógica de "Comprar Agora" (ex: redirecionar para checkout com o item)
-        console.log(`Comprar agora: ${productName} - R$ ${price.toFixed(2)}`);
-        showNotification(`Comprando agora: ${productName}`);
-        // Em um site real, você redirecionaria para a página de checkout
-    };
-
-    const cartItemsContainer = document.getElementById('cart-items');
-    const cartTotalSpan = document.getElementById('cart-total');
-    const cartCountBadge = document.querySelector('.cart-count');
-    const emptyCartMessage = document.querySelector('.empty-cart-message');
-
-    function updateCartDisplay() {
-        cartItemsContainer.innerHTML = ''; // Limpa os itens existentes
-        let total = 0;
-
-        if (cart.length === 0) {
-            emptyCartMessage.style.display = 'block';
-        } else {
-            emptyCartMessage.style.display = 'none';
-            cart.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.classList.add('cart-item');
-                itemElement.innerHTML = `
-                    <div class="cart-item-image">
-                        <i class="fas fa-shopping-bag"></i>
-                    </div>
-                    <div class="cart-item-details">
-                        <h5>${item.name}</h5>
-                        <p>Qtd: ${item.quantity}</p>
-                    </div>
-                    <span class="cart-item-price">R$ ${(item.price * item.quantity).toFixed(2)}</span>
-                    <button class="remove-from-cart-btn" onclick="removeFromCart('${item.id}')">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                `;
-                cartItemsContainer.appendChild(itemElement);
-                total += item.price * item.quantity;
-            });
-        }
-        
-        cartTotalSpan.textContent = `R$ ${total.toFixed(2)}`;
-        cartCountBadge.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+    // Ativa o link de Início por padrão
+    const homeLink = document.querySelector('.nav-link[href="#home"]');
+    if (homeLink) {
+        homeLink.classList.add('active');
     }
 
-    window.removeFromCart = function(productId) {
-        cart = cart.filter(item => item.id !== productId);
-        updateCartDisplay();
-        showNotification('Item removido do carrinho.');
-    };
+    // Adiciona listener para a rolagem ativar o link correto
+    window.addEventListener('scroll', activateNavLink);
+    // Ativa ao carregar (para garantir que a seção inicial seja marcada)
+    activateNavLink();
 
-    window.toggleWishlist = function(buttonElement) {
-        buttonElement.classList.toggle('active');
-        const icon = buttonElement.querySelector('i');
-        if (buttonElement.classList.contains('active')) {
-            icon.classList.remove('far');
-            icon.classList.add('fas');
-            icon.style.color = 'var(--primary-color)';
-            showNotification('Adicionado à lista de desejos!');
-        } else {
-            icon.classList.remove('fas');
-            icon.classList.add('far');
-            icon.style.color = ''; // Volta à cor padrão do CSS
-            showNotification('Removido da lista de desejos.');
-        }
-    };
-
-    // Quick View Modal
-    const quickViewModal = document.getElementById('quick-view-modal');
-    const quickViewDetails = document.getElementById('quick-view-details');
-    
-    window.quickView = function(productId) {
-        // Simular carregamento de dados do produto
-        let productData = {
-            'ecobag-classica': {
-                name: 'Ecobag Clássica',
-                description: 'Esta é uma descrição detalhada da Ecobag Clássica. Feita com materiais sustentáveis, design elegante e super resistente para o dia a dia. Perfeita para quem busca estilo e consciência ambiental.',
-                price: 'R$ 45,00',
-                features: ['Sustentável', 'Resistente', 'Lavável', 'Design Clássico'],
-                imageIcon: '<i class="fas fa-shopping-bag"></i>'
-            },
-            'ecobag-deluxe': {
-                name: 'Ecobag Deluxe',
-                description: 'A Ecobag Deluxe eleva o nível da sustentabilidade com um toque de exclusividade. Alças reforçadas, acabamento artesanal impecável e um compartimento interno secreto. Ideal para quem não abre mão de qualidade e elegância.',
-                price: 'R$ 75,00',
-                features: ['Exclusiva', 'Reforçada', 'Elegante', 'Acabamento Artesanal'],
-                imageIcon: '<i class="fas fa-leaf"></i>'
-            },
-            'mini-classica': {
-                name: 'Mini Bag Crochê Clássica',
-                description: 'Uma mini bag encantadora para ocasiões especiais. Seu design compacto e elegante é perfeito para carregar o essencial com muito charme. Cada ponto é feito com delicadeza e precisão.',
-                price: 'R$ 35,00',
-                features: ['Elegante', 'Compacta', 'Versátil', 'Feita à Mão'],
-                imageIcon: '<i class="fas fa-gem"></i>'
-            },
-            'mini-luxo': {
-                name: 'Mini Bag Crochê Luxo',
-                description: 'Nossa mini bag mais exclusiva com acabamento refinado, detalhes especiais e forro interno. Esta peça é uma verdadeira joia artesanal. Ideal para eventos e momentos inesquecíveis.',
-                price: 'R$ 85,00',
-                features: ['Luxo', 'Exclusiva', 'Detalhes Únicos', 'Design Sofisticado'],
-                imageIcon: '<i class="fas fa-crown"></i>'
-            }
-        };
-
-        const product = productData[productId];
-
-        if (product) {
-            quickViewDetails.innerHTML = `
-                <div class="quick-view-header">
-                    <div class="quick-view-image-placeholder">${product.imageIcon}</div>
-                    <h4 class="text-glow">${product.name}</h4>
-                </div>
-                <p>${product.description}</p>
-                <div class="product-features quick-view-features">
-                    ${product.features.map(f => `<span class="feature">${f}</span>`).join('')}
-                </div>
-                <div class="product-price quick-view-price">
-                    <span class="price-current">${product.price}</span>
-                    <span class="price-installment">em até ${product.price.includes('45,00') ? '3x' : product.price.includes('75,00') ? '5x' : product.price.includes('35,00') ? '2x' : '5x'} R$ ${(parseFloat(product.price.replace('R$', '').replace(',', '.')) / (product.price.includes('45,00') ? 3 : product.price.includes('75,00') ? 5 : product.price.includes('35,00') ? 2 : 5)).toFixed(2).replace('.', ',')}</span>
-                </div>
-                <button class="add-to-cart-btn led-btn-warm" onclick="addToCart('${product.name}', ${parseFloat(product.price.replace('R$', '').replace(',', '.'))}, '${productId}'); closeQuickView();">
-                    <span>Adicionar ao Carrinho</span>
-                    <i class="fas fa-shopping-cart"></i>
-                    <div class="btn-ripple"></div>
-                </button>
-            `;
-            quickViewModal.classList.add('open');
-        } else {
-            quickViewDetails.innerHTML = `<h4>Produto não encontrado.</h4>`;
-            quickViewModal.classList.add('open');
-        }
-    };
-
-    window.closeQuickView = function() {
-        quickViewModal.classList.remove('open');
-    };
-
-    // Fechar modal ao clicar fora do conteúdo
-    quickViewModal.addEventListener('click', (event) => {
-        if (event.target === quickViewModal) {
-            closeQuickView();
-        }
-    });
-
-    // 6. Load More Products (Exemplo simples: em um site real, você carregaria de um servidor)
-    window.loadMoreProducts = function() {
-        // Aqui você adicionaria lógica para carregar mais produtos dinamicamente.
-        // Por exemplo, fazer uma requisição AJAX para um backend.
-        // Para este exemplo, apenas uma notificação:
-        showNotification('Buscando mais produtos... (Funcionalidade de exemplo)');
-        // Você poderia adicionar mais HTML de produtos aqui programaticamente
-    };
-
-    // Função de Notificação (Toast)
-    function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.classList.add('app-notification');
-        notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-        document.body.appendChild(notification);
-
-        // Força o reflow para a transição funcionar
-        void notification.offsetWidth; 
-        notification.classList.add('show');
-
-        setTimeout(() => {
-            notification.classList.remove('show');
-            notification.addEventListener('transitionend', () => {
-                notification.remove();
-            });
-        }, 3000); // Remove a notificação após 3 segundos
-    }
+    // Inicializa a exibição do carrinho (vazio ao carregar a página)
+    updateCartDisplay();
 });
+
+
+// Funções de Navegação e Interatividade
+function toggleSearch() {
+    const searchOverlay = document.getElementById('search-overlay');
+    searchOverlay.classList.toggle('active');
+    if (searchOverlay.classList.contains('active')) {
+        document.querySelector('.search-input').focus();
+    }
+}
+
+function openCart() {
+    const cartSidebar = document.getElementById('cart-sidebar');
+    cartSidebar.classList.add('active');
+    document.body.classList.add('no-scroll'); // Previne rolagem do corpo
+}
+
+function closeCart() {
+    const cartSidebar = document.getElementById('cart-sidebar');
+    cartSidebar.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+}
+
+function toggleMobileMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    navLinks.classList.toggle('active');
+    // Adicionar/remover classe para ícone do menu caso necessário
+}
+
+function scrollToSection(id) {
+    const section = document.getElementById(id);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+    // A classe 'active' para os links da navbar agora é gerenciada por 'activateNavLink' no evento scroll.
+    // Isso garante que mesmo se o usuário rolar, o link correto será ativado.
+}
+
+// Funções do Carrinho de Compras
+let cart = [];
+
+function updateCartCount() {
+    const cartCount = document.querySelector('.cart-count');
+    cartCount.textContent = cart.length;
+}
+
+function updateCartDisplay() {
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartTotalElement = document.getElementById('cart-total');
+    let total = 0;
+
+    cartItemsContainer.innerHTML = ''; // Limpa o carrinho atual
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p class="empty-cart-message">Seu carrinho está vazio.</p>';
+    } else {
+        cart.forEach((item, index) => {
+            const cartItemDiv = document.createElement('div');
+            cartItemDiv.classList.add('cart-item');
+            cartItemDiv.innerHTML = `
+                <span>${item.name}</span>
+                <span>R$ ${item.price.toFixed(2)}</span>
+                <button class="remove-item-btn" onclick="removeFromCart(${index})"><i class="fas fa-times"></i></button>
+            `;
+            cartItemsContainer.appendChild(cartItemDiv);
+            total += item.price;
+        });
+    }
+
+    cartTotalElement.textContent = `R$ ${total.toFixed(2)}`;
+    updateCartCount();
+}
+
+function addToCart(productName, productPrice, productId) {
+    cart.push({ id: productId, name: productName, price: productPrice });
+    updateCartDisplay();
+    alert(`${productName} adicionado ao carrinho!`);
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartDisplay();
+}
+
+function buyNow(productName, productPrice) {
+    alert(`Comprar Agora: ${productName} por R$ ${productPrice.toFixed(2)}`);
+    // Aqui você integraria com um gateway de pagamento real
+}
+
+// Funções do Quick View
+function quickView(productId) {
+    const modal = document.getElementById('quick-view-modal');
+    const modalDetails = document.getElementById('quick-view-details');
+
+    // Simular carregamento de detalhes do produto
+    let productDetails = {};
+    if (productId === 'ecobag-classica') {
+        productDetails = {
+            name: 'Ecobag Clássica',
+            description: 'Uma ecobag resistente e elegante, perfeita para suas compras e uso diário. Feita com fio 100% algodão, possui um acabamento impecável, sendo sustentável, resistente e lavável. Design prático e consciente.',
+            price: 'R$ 45,00',
+            installments: '3x de R$ 15,00',
+            image: '<i class="fas fa-shopping-bag"></i>', // Placeholder para imagem real
+            category: 'Ecobags',
+            features: ['Sustentável', 'Resistente', 'Lavável']
+        };
+    } else if (productId === 'ecobag-deluxe') {
+        productDetails = {
+            name: 'Ecobag Deluxe',
+            description: 'Nossa ecobag mais sofisticada, com detalhes especiais e alças reforçadas para maior durabilidade. Possui acabamento cuidadoso e um design elegante que se destaca. Ideal para quem busca exclusividade e praticidade.',
+            price: 'R$ 75,00',
+            installments: '5x de R$ 15,00',
+            image: '<i class="fas fa-leaf"></i>',
+            category: 'Ecobags',
+            features: ['Exclusiva', 'Reforçada', 'Elegante']
+        };
+    } else if (productId === 'mini-classica') {
+        productDetails = {
+            name: 'Mini Bag Crochê Clássica',
+            description: 'Bolsinha pequena e elegante, ideal para festas e eventos especiais. Seu design sofisticado e detalhes únicos a tornam uma peça versátil e compacta, perfeita para carregar o essencial com muito estilo.',
+            price: 'R$ 35,00',
+            installments: '2x de R$ 17,50',
+            image: '<i class="fas fa-gem"></i>',
+            category: 'Mini Bags',
+            features: ['Elegante', 'Compacta', 'Versátil']
+        };
+    } else if (productId === 'mini-luxo') {
+        productDetails = {
+            name: 'Mini Bag Crochê Luxo',
+            description: 'Nossa mini bag mais exclusiva, com acabamento refinado, forro interno e detalhes únicos que a destacam. Uma peça de luxo, edição limitada, feita para ocasiões especiais, adicionando um toque de sofisticação ao seu look.',
+            price: 'R$ 85,00',
+            installments: '5x de R$ 17,00',
+            image: '<i class="fas fa-crown"></i>',
+            category: 'Mini Bags',
+            features: ['Luxo', 'Exclusiva', 'Detalhes Únicos']
+        };
+    } else {
+        modalDetails.innerHTML = '<p>Produto não encontrado.</p>';
+        modal.classList.add('active');
+        return;
+    }
+
+    modalDetails.innerHTML = `
+        <div class="product-modal-content">
+            <div class="product-modal-image">
+                ${productDetails.image}
+            </div>
+            <div class="product-modal-info">
+                <span class="product-modal-category">${productDetails.category}</span>
+                <h3>${productDetails.name}</h3>
+                <p>${productDetails.description}</p>
+                <div class="product-modal-features">
+                    ${productDetails.features.map(f => `<span>${f}</span>`).join('')}
+                </div>
+                <div class="product-modal-price">
+                    <span class="price-current">${productDetails.price}</span>
+                    <span class="price-installment">${productDetails.installments}</span>
+                </div>
+                <button class="add-to-cart-btn led-btn-warm" onclick="addToCart('${productDetails.name}', parseFloat('${productDetails.price.replace('R$', '').replace(',', '.').trim()}'), '${productId}')">
+                    Adicionar ao Carrinho <i class="fas fa-shopping-cart"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    modal.classList.add('active');
+    document.body.classList.add('no-scroll');
+}
+
+function closeQuickView() {
+    const modal = document.getElementById('quick-view-modal');
+    modal.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+}
+
+
+// Funções de Filtragem de Produtos
+function filterProducts(category) {
+    const productCards = document.querySelectorAll('.product-card');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+
+    filterButtons.forEach(button => button.classList.remove('active'));
+    document.querySelector(`.filter-btn[data-filter="${category}"]`).classList.add('active');
+
+    productCards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block'; // Ou 'flex', 'grid' dependendo do seu CSS
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function loadMoreProducts() {
+    // Implementar lógica para carregar mais produtos (ex: de uma API ou array)
+    alert('Função para carregar mais produtos em desenvolvimento!');
+}
+
+function toggleWishlist(button) {
+    button.querySelector('i').classList.toggle('far');
+    button.querySelector('i').classList.toggle('fas');
+    button.querySelector('i').classList.toggle('fa-heart');
+    button.classList.toggle('wishlisted');
+}
+
+function openCustomization() {
+    alert('Funcionalidade de Personalização em breve!');
+    // Redirecionar para uma página de personalização ou abrir outro modal complexo
+}
+
+
+// --- Função para Newsletter ---
+function subscribeNewsletter() {
+    // Corrigido para o ID 'newsletterEmail' do HTML
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim();
+
+    if (email && validateEmail(email)) {
+        // Simulação de envio do e-mail para um serviço externo
+        // EM UM SITE REAL NO GITHUB PAGES, VOCÊ PRECISA DE UM SERVIÇO DE BACKEND.
+        // Exemplos: Formspree, Netlify Forms, ou uma API própria.
+
+        // Por enquanto, faremos uma simulação simples de sucesso/falha.
+        // Em um cenário real, você faria uma requisição Fetch/Ajax para um endpoint.
+
+        console.log(`E-mail para newsletter: ${email}`);
+        alert('Obrigado por se inscrever! Você receberá nossas novidades em breve.');
+        emailInput.value = ''; // Limpa o campo após a inscrição
+    } else {
+        alert('Por favor, insira um e-mail válido.');
+    }
+}
+
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
