@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trama Chic - Bolsas Artesanais de Crochê</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loading-logo">
+            <h1>Trama Chic</h1>
+            <div class="loading-spinner"></div>
+            <p>Preparando sua experiência artesanal...</p>
+        </div>
+    </div>
+
+    <header id="header">
+        <nav class="navbar">
+            <div class="logo-container">
+                <div class="logo">
+                    <span class="logo-text">Trama Chic</span>
+                    <div class="logo-led"></div>
+                </div>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link led-btn">
+                    <span>Início</span>
+                    <div class="led-effect"></div>
+                </a></li>
+                <li><a href="#produtos" class="nav-link led-btn">
+                    <span>Produtos</span>
+                    <div class="led-effect"></div>
+                </a></li>
+                <li><a href="#sobre" class="nav-link led-btn">
+                    <span>Sobre</span>
+                    <div class="led-effect"></div>
+                </a></li>
+                <li><a href="#contato" class="nav-link led-btn">
+                    <span>Contato</span>
+                    <div class="led-effect"></div>
+                </a></li>
+            </ul>
+
+            <div class="header-actions">
+                <button class="search-btn led-interactive" onclick="toggleSearch()">
+                    <i class="fas fa-search"></i>
+                    <div class="led-glow"></div>
+                </button>
+                <button class="cart-btn led-interactive" onclick="openCart()">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count led-badge">0</span>
+                    <div class="led-glow"></div>
+                </button>
+                <button class="menu-toggle led-interactive" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                    <div class="led-glow"></div>
+                </button>
+            </div>
+        </nav>
+
+        <div id="search-overlay" class="search-overlay">
+            <div class="search-container">
+                <input type="text" placeholder="Buscar produtos..." class="search-input">
+                <button class="search-close led-btn" onclick="toggleSearch()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-background">
+            <div class="floating-particles"></div>
+            <div class="led-grid"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-badge led-badge-large">
+                <span>✨ Artesanal Exclusivo</span>
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="text-glow">Trama Chic</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Bolsas artesanais de crochê feitas com carinho e sustentabilidade. 
+                Cada peça é única e carrega a dedicação de nossas talentosas artesãs.
+            </p>
+            
+            <div class="hero-buttons">
+                <button class="cta-primary led-btn-warm" onclick="scrollToSection('produtos')">
+                    <span>Ver Coleção</span>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="led-trail"></div>
+                </button>
+                
+                <button class="cta-secondary led-btn-outline" onclick="scrollToSection('sobre')">
+                    <span>Nossa História</span>
+                    <div class="led-border"></div>
+                </button>
+            </div>
+            
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="scroll-arrow led-pulse">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories" id="categorias">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge led-badge">Categorias</div>
+                <h2 class="section-title">
+                    <span class="text-glow">Nossas Criações</span>
+                </h2>
+                <p class="section-subtitle">
+                    Descubra nossa coleção exclusiva de bolsas artesanais
+                </p>
+            </div>
+
+            <div class="category-grid">
+                <div class="category-card led-card" data-category="ecobag">
+                    <div class="card-led-frame"></div>
+                    <div class="category-icon">
+                        <i class="fas fa-leaf"></i>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <h3>Ecobags Sustentáveis</h3>
+                    <p>Bolsas ecológicas para suas compras do dia a dia. Estilo, funcionalidade e consciência ambiental em uma peça única.</p>
+                    <div class="category-features">
+                        <span class="feature-tag">✓ 100% Sustentável</span>
+                        <span class="feature-tag">✓ Super Resistente</span>
+                        <span class="feature-tag">✓ Lavável</span>
+                    </div>
+                    <button class="category-btn led-btn-glow" onclick="filterProducts('ecobag')">
+                        <span>Ver Ecobags</span>
+                        <div class="btn-particles"></div>
+                    </button>
+                </div>
+
+                <div class="category-card led-card" data-category="mini">
+                    <div class="card-led-frame"></div>
+                    <div class="category-icon">
+                        <i class="fas fa-gem"></i>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <h3>Mini Bags Crochê</h3>
+                    <p>Bolsinhas delicadas e sofisticadas, perfeitas para ocasiões especiais. Elegância e charme em cada detalhe.</p>
+                    <div class="category-features">
+                        <span class="feature-tag">✓ Design Exclusivo</span>
+                        <span class="feature-tag">✓ Acabamento Cuidadoso</span>
+                        <span class="feature-tag">✓ Versátil</span>
+                    </div>
+                    <button class="category-btn led-btn-glow" onclick="filterProducts('mini')">
+                        <span>Ver Mini Bags</span>
+                        <div class="btn-particles"></div>
+                    </button>
+                </div>
+
+                <div class="category-card led-card" data-category="custom">
+                    <div class="card-led-frame"></div>
+                    <div class="category-icon">
+                        <i class="fas fa-magic"></i>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <h3>Peças Personalizadas</h3>
+                    <p>Crie sua bolsa dos sonhos! Escolha cores, tamanhos, padrões e detalhes especiais para uma peça única e exclusiva.</p>
+                    <div class="category-features">
+                        <span class="feature-tag">✓ 100% Personalizada</span>
+                        <span class="feature-tag">✓ Sua Criação</span>
+                        <span class="feature-tag">✓ Peça Única</span>
+                    </div>
+                    <button class="category-btn led-btn-glow" onclick="openCustomization()">
+                        <span>Personalizar</span>
+                        <div class="btn-particles"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="products" id="produtos">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge led-badge">Catálogo</div>
+                <h2 class="section-title">
+                    <span class="text-glow">Produtos em Destaque</span>
+                </h2>
+                <p class="section-subtitle">
+                    Cada peça é cuidadosamente criada à mão com materiais de alta qualidade
+                </p>
+            </div>
+
+            <div class="product-filters">
+                <button class="filter-btn led-btn active" onclick="filterProducts('all')" data-filter="all">
+                    <span>Todos</span>
+                    <div class="led-indicator"></div>
+                </button>
+                <button class="filter-btn led-btn" onclick="filterProducts('ecobag')" data-filter="ecobag">
+                    <span>Ecobags</span>
+                    <div class="led-indicator"></div>
+                </button>
+                <button class="filter-btn led-btn" onclick="filterProducts('mini')" data-filter="mini">
+                    <span>Mini Bags</span>
+                    <div class="led-indicator"></div>
+                </button>
+            </div>
+
+            <div class="product-grid" id="productGrid">
+                <div class="product-card led-product-card" data-category="ecobag">
+                    <div class="product-led-frame"></div>
+                    <div class="product-badge led-badge-small">Mais Vendido</div>
+                    
+                    <div class="product-image">
+                        <div class="image-placeholder">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="product-overlay">
+                            <button class="quick-view-btn led-btn-circle" onclick="quickView('ecobag-classica')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="wishlist-btn led-btn-circle" onclick="toggleWishlist(this)">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="image-glow"></div>
+                    </div>
+                    
+                    <div class="product-info">
+                        
+                        <h4 class="product-name">Ecobag Clássica</h4>
+                        <p class="product-description">
+                            Ecobag resistente e elegante, perfeita para suas compras. 
+                            Feita com fio 100% algodão e acabamento impecável.
+                        </p>
+                        
+                        <div class="product-features">
+                            <span class="feature">Sustentável</span>
+                            <span class="feature">Resistente</span>
+                            <span class="feature">Lavável</span>
+                        </div>
+                        
+                        <div class="product-price">
+                            <span class="price-current">R$ 45,00</span>
+                            <span class="price-installment">3x R$ 15,00</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn led-btn-warm" onclick="addToCart('Ecobag Clássica', 45.00, 'ecobag-classica')">
+                                <span>Adicionar ao Carrinho</span>
+                                <i class="fas fa-shopping-cart"></i>
+                                <div class="btn-ripple"></div>
+                            </button>
+                            
+                            <button class="buy-now-btn led-btn-light-brown" onclick="buyNow('Ecobag Clássica', 45.00)">
+                                <span>Comprar Agora</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card led-product-card" data-category="ecobag">
+                    <div class="product-led-frame"></div>
+                    <div class="product-badge led-badge-small">Exclusiva</div>
+                    
+                    <div class="product-image">
+                        <div class="image-placeholder">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="product-overlay">
+                            <button class="quick-view-btn led-btn-circle" onclick="quickView('ecobag-deluxe')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="wishlist-btn led-btn-circle" onclick="toggleWishlist(this)">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="image-glow"></div>
+                    </div>
+                    
+                    <div class="product-info">
+                        
+                        <h4 class="product-name">Ecobag Deluxe</h4>
+                        <p class="product-description">
+                            Nossa ecobag mais sofisticada com detalhes especiais, 
+                            alças reforçadas e acabamento cuidadoso.
+                        </p>
+                        
+                        <div class="product-features">
+                            <span class="feature">Exclusiva</span>
+                            <span class="feature">Reforçada</span>
+                            <span class="feature">Elegante</span>
+                        </div>
+                        
+                        <div class="product-price">
+                            <span class="price-current">R$ 75,00</span>
+                            <span class="price-installment">5x R$ 15,00</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn led-btn-warm" onclick="addToCart('Ecobag Deluxe', 75.00, 'ecobag-deluxe')">
+                                <span>Adicionar ao Carrinho</span>
+                                <i class="fas fa-shopping-cart"></i>
+                                <div class="btn-ripple"></div>
+                            </button>
+                            
+                            <button class="buy-now-btn led-btn-light-brown" onclick="buyNow('Ecobag Deluxe', 75.00)">
+                                <span>Comprar Agora</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card led-product-card" data-category="mini">
+                    <div class="product-led-frame"></div>
+                    <div class="product-badge led-badge-small">Lançamento</div>
+                    
+                    <div class="product-image">
+                        <div class="image-placeholder">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="product-overlay">
+                            <button class="quick-view-btn led-btn-circle" onclick="quickView('mini-classica')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="wishlist-btn led-btn-circle" onclick="toggleWishlist(this)">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="image-glow"></div>
+                    </div>
+                    
+                    <div class="product-info">
+                        
+                        <h4 class="product-name">Mini Bag Crochê Clássica</h4>
+                        <p class="product-description">
+                            Bolsinha pequena e elegante, ideal para festas e eventos especiais. 
+                            Design sofisticado com detalhes únicos.
+                        </p>
+                        
+                        <div class="product-features">
+                            <span class="feature">Elegante</span>
+                            <span class="feature">Compacta</span>
+                            <span class="feature">Versátil</span>
+                        </div>
+                        
+                        <div class="product-price">
+                            <span class="price-current">R$ 35,00</span>
+                            <span class="price-installment">2x R$ 17,50</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn led-btn-warm" onclick="addToCart('Mini Bag Crochê Clássica', 35.00, 'mini-classica')">
+                                <span>Adicionar ao Carrinho</span>
+                                <i class="fas fa-shopping-cart"></i>
+                                <div class="btn-ripple"></div>
+                            </button>
+                            
+                            <button class="buy-now-btn led-btn-light-brown" onclick="buyNow('Mini Bag Crochê Clássica', 35.00)">
+                                <span>Comprar Agora</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card led-product-card" data-category="mini">
+                    <div class="product-led-frame"></div>
+                    <div class="product-badge led-badge-small">Edição Limitada</div>
+                    
+                    <div class="product-image">
+                        <div class="image-placeholder">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="product-overlay">
+                            <button class="quick-view-btn led-btn-circle" onclick="quickView('mini-luxo')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="wishlist-btn led-btn-circle" onclick="toggleWishlist(this)">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="image-glow"></div>
+                    </div>
+                    
+                    <div class="product-info">
+                        
+                        <h4 class="product-name">Mini Bag Crochê Luxo</h4>
+                        <p class="product-description">
+                            Nossa mini bag mais exclusiva com acabamento refinado, 
+                            detalhes especiais e forro interno.
+                        </p>
+                        
+                        <div class="product-features">
+                            <span class="feature">Luxo</span>
+                            <span class="feature">Exclusiva</span>
+                            <span class="feature">Detalhes Únicos</span>
+                        </div>
+                        
+                        <div class="product-price">
+                            <span class="price-current">R$ 85,00</span>
+                            <span class="price-installment">5x R$ 17,00</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn led-btn-warm" onclick="addToCart('Mini Bag Crochê Luxo', 85.00, 'mini-luxo')">
+                                <span>Adicionar ao Carrinho</span>
+                                <i class="fas fa-shopping-cart"></i>
+                                <div class="btn-ripple"></div>
+                            </button>
+                            
+                            <button class="buy-now-btn led-btn-light-brown" onclick="buyNow('Mini Bag Crochê Luxo', 85.00)">
+                                <span>Comprar Agora</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            
+            <div class="load-more-container">
+                <button class="load-more-btn led-btn-glow" onclick="loadMoreProducts()">
+                    <span>Carregar Mais Produtos</span>
+                    <i class="fas fa-plus"></i>
+                    <div class="btn-particles"></div>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="sobre">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="section-badge led-badge">Nossa Essência</div>
+                    <h2 class="section-title">
+                        <span class="text-glow">Artesanato com Alma</span>
+                    </h2>
+                    
+                    <p class="about-description">
+                        Na <strong>Trama Chic</strong>, cada bolsa conta uma história única. Nascemos da paixão pelo artesanato 
+                        e do desejo de criar peças extraordinárias que combinam beleza, funcionalidade e consciência ambiental.
+                    </p>
+                    
+                    <p class="about-description">
+                        Nossos produtos são cuidadosamente feitos à mão por talentosas artesãs, utilizando técnicas tradicionais 
+                        de crochê e materiais de alta qualidade. Cada peça carrega o carinho e dedicação de um trabalho artesanal.
+                    </p>
+                    
+                    <div class="about-values">
+                        <div class="value-item">
+                            <div class="value-icon">
+                                <i class="fas fa-heart"></i>
+                                <div class="icon-glow"></div>
+                            </div>
+                            <h4>Feito com Carinho</h4>
+                            <p>Cada ponto é dado com amor e atenção aos detalhes</p>
+                        </div>
+                        
+                        <div class="value-item">
+                            <div class="value-icon">
+                                <i class="fas fa-leaf"></i>
+                                <div class="icon-glow"></div>
+                            </div>
+                            <h4>Sustentável</h4>
+                            <p>Materiais ecológicos e processos responsáveis</p>
+                        </div>
+                        
+                        <div class="value-item">
+                            <div class="value-icon">
+                                <i class="fas fa-hand-sparkles"></i>
+                                <div class="icon-glow"></div>
+                            </div>
+                            <h4>Toque Artesanal</h4>
+                            <p>Peças únicas com a beleza do feito à mão</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="about-visual">
+                    <div class="about-image">
+                        <div class="image-placeholder">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <div class="floating-elements">
+                            <div class="floating-icon" style="--delay: 0s;">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="floating-icon" style="--delay: 1s;">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div class="floating-icon" style="--delay: 2s;">
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="contato">
+        <div class="footer-glow"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <h3>Trama Chic</h3>
+                        <div class="logo-led-small"></div>
+                    </div>
+                    <p>Bolsas artesanais feitas com carinho, paixão e sustentabilidade. Cada peça é única e carrega nossa história.</p>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link led-btn-circle">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link led-btn-circle">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link led-btn-circle">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" class="social-link led-btn-circle">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contato</h4>
+                    <div class="contact-info">
+                        <div class="contact-item led-btn-subtle">
+                            <i class="fas fa-phone"></i>
+                            <span>(11) 99999-9999</span>
+                        </div>
+                        <div class="contact-item led-btn-subtle">
+                            <i class="fas fa-envelope"></i>
+                            <span>contato@tramachic.com.br</span>
+                        </div>
+                        <div class="contact-item led-btn-subtle">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>São Paulo - SP</span>
+                        </div>
+                        <div class="contact-item led-btn-subtle">
+                            <i class="fas fa-clock"></i>
+                            <span>Seg-Sex: 9h às 18h</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Informações</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="led-btn-subtle">Sobre Nós</a></li>
+                        <li><a href="#" class="led-btn-subtle">Como Comprar</a></li>
+                        <li><a href="#" class="led-btn-subtle">Trocas e Devoluções</a></li>
+                        <li><a href="#" class="led-btn-subtle">Política de Privacidade</a></li>
+                        <li><a href="#" class="led-btn-subtle">Termos de Uso</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Receba novidades e ofertas exclusivas:</p>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Seu e-mail" class="newsletter-input">
+                        <button class="newsletter-btn led-btn-warm">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="payment-methods">
+                        <h5>Formas de Pagamento:</h5>
+                        <div class="payment-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fas fa-qrcode"></i> <i class="fas fa-barcode"></i> </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Trama Chic. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Seu Carrinho</h3>
+            <button class="close-cart-btn led-btn-circle" onclick="closeCart()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p class="empty-cart-message">Seu carrinho está vazio.</p>
+        </div>
+        <div class="cart-summary">
+            <p>Total: <span id="cart-total">R$ 0,00</span></p>
+            <button class="checkout-btn led-btn-warm">Finalizar Compra <i class="fas fa-credit-card"></i></button>
+        </div>
+    </div>
+
+    <div id="quick-view-modal" class="quick-view-modal">
+        <div class="modal-content">
+            <button class="close-modal-btn led-btn-circle" onclick="closeQuickView()"><i class="fas fa-times"></i></button>
+            <div id="quick-view-details">
+                <h4>Carregando...</h4>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
